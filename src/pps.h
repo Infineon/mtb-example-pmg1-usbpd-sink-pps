@@ -1,14 +1,14 @@
-/******************************************************************************
-* File Name: vdm.h
+/*******************************************************************************
+* File Name: pps.h
 *
-* Description: This header file defines data structures and function prototypes
-*              for the Vendor Defined Message (VDM) handler as part of the PMG1
-*              MCU USB-PD Sink PPS demo Code Example for ModusToolBox.
+* Description:
+*  This file contains the structure declaration and function prototypes used in
+*  the USB PD Sink PPS Code example.
 *
 * Related Document: See README.md
 *
 *******************************************************************************
-* Copyright 2021-2023, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2023-2024, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -39,65 +39,60 @@
 * of such system or application assumes all risk of such use and in doing
 * so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
-
-#ifndef _VDM_H_
-#define _VDM_H_
+#ifndef SRC_PPS_H_
+#define SRC_PPS_H_
 
 /*******************************************************************************
- * Header files including
+ * Header files
  ******************************************************************************/
-
+#include "cy_pdutils_sw_timer.h"
 #include "cy_pdstack_common.h"
 
-/* Data object index of the ID Header field in the Discover Identity response. */
-#define ID_HEADER_DO_INDEX                      (1u)
+/*******************************************************************************
+ * Macros
+ ******************************************************************************/
 
-/* Data object index of the Product VDO field in the Discover Identity response. */
-#define PRODUCT_VDO_DO_INDEX                    (3u)
+/*
+ * The drive signal of the GPIO connected to Capsense Widget LED's to turn it ON.
+ */
+#define LED_ON                                  (0u)
 
-/* Position of Vendor ID portion in ID Header VDO. */
-#define ID_HEADER_VID_POS                       (0u)
+/*
+ * The drive signal of the GPIO connected to Capsense Widget LED's to turn it OFF.
+ */
+#define LED_OFF                                 (1u)
 
-/* Mask for Vendor ID portion in ID Header VDO. */
-#define ID_HEADER_VID_MASK                      (0xFFFFUL)
+/*
+ * Mask to select PDO type.
+ */
+#define PDO_MASK                                (0x0F)
 
-/* Position of Product ID portion in Product VDO. */
-#define PRODUCT_VDO_PID_POS                     (16u)
-
-/* Mask for Product ID portion in Product VDO. */
-#define PRODUCT_VDO_PID_MASK                    (0xFFFF0000UL)
+/*
+ * Mask to select APDO type.
+ */
+#define APDO_MASK                               (0xF0)
 
 /*****************************************************************************
- * Global Function Declaration
- *****************************************************************************/
-
+ * Data struct definition
+ ****************************************************************************/
 /**
- * @brief Store the VDM data from the configuration table.
- *
- * This function retrieves the VDM data (for CCG as UFP) that is stored in
- * the configuration table and stores it in the run-time data structures.
- *
- * @param port USB-PD port for which the data is to be stored.
- *
- * @return None.
+ * @typedef en_supply_type_t
+ * @brief Types of power supply.
  */
-void vdm_data_init (cy_stc_pdstack_context_t * context);
+typedef enum {
+    FIXED_SUPPLY                     = 0x00, /**< Fixed Supply */
+    BATTERY_SUPPLY                   = 0x01, /**< Battery Supply */
+    VARIABLE_SUPPLY                  = 0x02, /**< Variable Supply */
+    PROGRAMMABLE_POWER_SUPPLY        = 0x03, /**< Programmable Power Supply */
+    EPR_ADJUSTABLE_VOLTAGE_SUPPLY    = 0x13, /**< EPR Adjustable Voltage Supply */
+    SPR_ADJUSTABLE_VOLTAGE_SUPPLY    = 0x23, /**< SPR Adjustable Voltage Supply */
+} en_supply_type_t;
 
-/**
- * @brief This function is responsible for analysing and processing received VDM.
- * This function also makes a decision about necessity of response to the received
- * VDM.
- *
- * @param port Port index the function is performed for.
- * @param vdm Pointer to pd packet which contains received VDM.
- * @param vdm_resp_handler VDM handler callback function.
- *
- * @return None
- */
-void eval_vdm(cy_stc_pdstack_context_t * context, const cy_stc_pdstack_pd_packet_t *vdm,
-        cy_pdstack_vdm_resp_cbk_t vdm_resp_handler);
+/******************************************************************************
+ * Global function declaration
+ ******************************************************************************/
 
-#endif /* _VDM_H_ */
+extern void updatePPScontract(int16_t volt, int16_t cur);
+void pps_timer_cb(cy_timer_id_t id, void *callbackContext);
 
-/* End of File */
-
+#endif /* SRC_PPS_H_ */

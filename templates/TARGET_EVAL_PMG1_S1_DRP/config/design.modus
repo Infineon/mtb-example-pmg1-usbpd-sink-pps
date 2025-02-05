@@ -23,6 +23,11 @@
                         <Alias value="CYBSP_I2C_SCL"/>
                     </Aliases>
                 </Block>
+                <Block location="scb[2]">
+                    <Aliases>
+                        <Alias value="CYBSP_UART"/>
+                    </Aliases>
+                </Block>
                 <Personality template="m0s8dap" version="1.0">
                     <Block location="cpuss[0].dap[0]" locked="true"/>
                     <Parameters>
@@ -141,7 +146,7 @@
                 <Personality template="m0s8peripheralclock" version="1.0">
                     <Block location="peri[0].div_8[3]" locked="true">
                         <Aliases>
-                            <Alias value="CLK_REFGEN"/>
+                            <Alias value="CLK_FILTER1"/>
                         </Aliases>
                     </Block>
                     <Parameters>
@@ -162,7 +167,7 @@
                         <Param id="calc" value="man"/>
                         <Param id="desFreq" value="48000000.000000"/>
                         <Param id="fracDivider" value="0"/>
-                        <Param id="intDivider" value="480"/>
+                        <Param id="intDivider" value="2400"/>
                         <Param id="startOnReset" value="true"/>
                     </Parameters>
                 </Personality>
@@ -259,9 +264,9 @@
                         <Param id="LS2GatePullUp" value="7"/>
                         <Param id="NfetSrcDrvStrength" value="0"/>
                         <Param id="OcpDebounce" value="10"/>
-                        <Param id="OcpMode" value="2"/>
+                        <Param id="OcpMode" value="1"/>
                         <Param id="OcpRetry" value="2"/>
-                        <Param id="OcpSenseRes" value="10"/>
+                        <Param id="OcpSenseRes" value="5"/>
                         <Param id="OcpThresh" value="20"/>
                         <Param id="OutOffsetVolt" value="0"/>
                         <Param id="OutVolt" value="20000"/>
@@ -273,7 +278,7 @@
                         <Param id="PeakCurrentSenseResistor" value="5000"/>
                         <Param id="PowerInductor" value="6800"/>
                         <Param id="PwmDitheringRange" value="0"/>
-                        <Param id="PwmDitheringType" value="3"/>
+                        <Param id="PwmDitheringType" value="0"/>
                         <Param id="PwmFixedFrequency" value="400"/>
                         <Param id="PwmMode" value="4"/>
                         <Param id="QC1Enable" value="0"/>
@@ -286,7 +291,7 @@
                         <Param id="ScpDebounce" value="10"/>
                         <Param id="ScpMode" value="2"/>
                         <Param id="ScpRetry" value="2"/>
-                        <Param id="ScpSenseRes" value="10"/>
+                        <Param id="ScpSenseRes" value="5"/>
                         <Param id="ScpThresh" value="6"/>
                         <Param id="SinkSel" value="3"/>
                         <Param id="SourceSel" value="1"/>
@@ -296,16 +301,16 @@
                         <Param id="UvpDebounce" value="10"/>
                         <Param id="UvpMode" value="2"/>
                         <Param id="UvpRetry" value="2"/>
-                        <Param id="UvpThresh" value="20"/>
+                        <Param id="UvpThresh" value="70"/>
                         <Param id="VbusOcp" value="false"/>
                         <Param id="VbusOvp" value="true"/>
                         <Param id="VbusRcp" value="false"/>
                         <Param id="VbusScp" value="false"/>
                         <Param id="VbusUvp" value="true"/>
                         <Param id="VconnOcp" value="false"/>
-                        <Param id="VconnOcpDebounce" value="10"/>
+                        <Param id="VconnOcpDebounce" value="1"/>
                         <Param id="VconnOcpRetry" value="2"/>
-                        <Param id="inFlash" value="false"/>
+                        <Param id="inFlash" value="true"/>
                     </Parameters>
                 </Personality>
             </BlockConfig>
@@ -323,10 +328,6 @@
                     <Port name="usbpd[0].clock_isnk[0]"/>
                 </Net>
                 <Net>
-                    <Port name="peri[0].div_8[0].clk[0]"/>
-                    <Port name="usbpd[0].clock_rx[0]"/>
-                </Net>
-                <Net>
                     <Port name="peri[0].div_8[1].clk[0]"/>
                     <Port name="usbpd[0].clock_tx[0]"/>
                 </Net>
@@ -337,7 +338,11 @@
                 <Net>
                     <Port name="peri[0].div_8[3].clk[0]"/>
                     <Port name="usbpd[0].clock_filter1[0]"/>
+                </Net>
+                <Net>
+                    <Port name="peri[0].div_8[0].clk[0]"/>
                     <Port name="usbpd[0].clock_refgen[0]"/>
+                    <Port name="usbpd[0].clock_rx[0]"/>
                 </Net>
             </Netlist>
         </Device>
